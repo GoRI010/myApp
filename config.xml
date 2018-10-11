@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="org.myapp.sample" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>appSample</name>
+    <name>Registra sitios</name>
     <description>
-        Hello World sample application that responds to the deviceready event.
+        Mini aplicación para registrar sitios en Cd. Valles.
     </description>
     <author email="support@phonegap.com" href="http://phonegap.com">
         PhoneGap Team
