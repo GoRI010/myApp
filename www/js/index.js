@@ -155,8 +155,7 @@ var app = {
         }
         
         function insertar(){
-          //SpinnerPlugin.activityStart("Loading...", options);
-          log(SpinnerPlugin);
+
           var onSuccess = function(position) {
             /*
             alert('Latitude: '          + position.coords.latitude          + '\n' +
@@ -173,12 +172,6 @@ var app = {
                     [nombre.value,descripcion.value,position.coords.latitude,position.coords.longitude],
                     function(tx, result){
                       nombre.value=''; descripcion.value="";
-                      //SpinnerPlugin.activityStop(function(){
-                        alert('fin');
-                      },
-                      function(e){
-                        alert(e);
-                      });
                     }, errorHandler);
                   });
                   
