@@ -86,10 +86,21 @@ var app = {
       document.getElementById('enlistar').onclick=enlistarValores;
       document.getElementById('borrar').onclick=borrarTodo;
       document.getElementById('borrarTable').onclick=borrarTable;
+      document.getElementById('locationbtn').onclick=getLocation;
+      
+
+      loadingOverlay=document.getElementById('loading-overlay');
+      latitud=document.getElementById('latitud');
+      longitud=document.getElementById('longitud');
             
       var nombre      = document.getElementById('nombre');
       var descripcion = document.getElementById('descripcion');
       var ul          = document.getElementById('salida');
+      setloading(false);
+
+      for(a in navigator.geolocation){
+        log(a);
+      }
 
       db.transaction(function(tx){
 
@@ -153,44 +164,47 @@ var app = {
           },errorHandler,nullHandler);
           return ;
         }
-        
-        function insertar(){
 
-          var onSuccess = function(position) {
-            /*
-            alert('Latitude: '          + position.coords.latitude          + '\n' +
-                  'Longitude: '         + position.coords.longitude         + '\n' +
-                  'Altitude: '          + position.coords.altitude          + '\n' +
-                  'Accuracy: '          + position.coords.accuracy          + '\n' +
-                  'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-                  'Heading: '           + position.coords.heading           + '\n' +
-                  'Speed: '             + position.coords.speed             + '\n' +
-                  'Timestamp: '         + position.timestamp                + '\n');
-            */
-                  db.transaction(function(tx){
-                    tx.executeSql('insert into places(nombre, descripcion, lat, lon) values(?,?,?,?)',
-                    [nombre.value,descripcion.value,position.coords.latitude,position.coords.longitude],
-                    function(tx, result){
-                      nombre.value=''; descripcion.value="";
-                    }, errorHandler);
-                  });
-                  
-                  enlistarValores();                  
-        };
-        
+        function setloading(v){
+          if(v==false){
+            loadingOverlay.style.display='none';
+          }else{
+            loadingOverlay.style.display='flex';
+          }
+        }
+
+        var onSuccess = function(position) {
+          latitude.value = position.coords.latitude;
+          longitud.value = position.coords.longitude;
+          setloading(false);
+        }
         // onError Callback receives a PositionError object
         //
         function onError(error) {
-            alert('code: '    + error.code    + '\n' +
-                  'message: ' + error.message + '\n');
+          alert('code: '    + error.code    + '\n' +
+                'message: ' + error.message + '\n');
         }
         
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
-
+        function getLocation(){
+          setloading(true);
+          navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        }
+        
+        function insertar(){
+          db.transaction(function(tx){
+            tx.executeSql('insert into places(nombre, descripcion, lat, lon) values(?,?,?,?)',
+            [nombre.value,descripcion.value,latitude.value,longitud.value],
+            function(tx, result){
+              nombre.value=''; 
+              descripcion.value="";
+              latitud.value=''; 
+              longitud.value="";
+            }, errorHandler);
+          });
+          
+          enlistarValores();
           return false;
         }
-        
-
 
         //app.receivedEvent('deviceready');
     },
