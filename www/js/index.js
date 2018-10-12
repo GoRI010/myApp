@@ -98,10 +98,6 @@ var app = {
       var ul          = document.getElementById('salida');
       setloading(false);
 
-      for(a in navigator.geolocation){
-        log(a);
-      }
-
       db.transaction(function(tx){
 
         tx.executeSql('create table if not exists places(id integer not null primary key, nombre text not null, descripcion text, lat text, lon text)',
