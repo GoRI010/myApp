@@ -73,140 +73,12 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-
-      var db;
-      var dbNombre = 'mydb';
-      var dbVersion = '1.0';
-      var dbDescription = 'Test DB';
-      var dbSize = 2*1024*1024;
-      
-      db=window.openDatabase(dbNombre,dbVersion,dbDescription,dbSize);
-      //alert(db);
-      document.getElementById('insertar').onclick=insertar;
-      document.getElementById('enlistar').onclick=enlistarValores;
-      document.getElementById('borrar').onclick=borrarTodo;
-      document.getElementById('borrarTable').onclick=borrarTable;
-      document.getElementById('locationbtn').onclick=getLocation;
-      
-
-      loadingOverlay=document.getElementById('loading-overlay');
-      latitud=document.getElementById('latitud');
-      longitud=document.getElementById('longitud');
-            
-      var nombre      = document.getElementById('nombre');
-      var descripcion = document.getElementById('descripcion');
-      var ul          = document.getElementById('salida');
-      setloading(false);
-
-      db.transaction(function(tx){
-
-        tx.executeSql('create table if not exists places(id integer not null primary key, nombre text not null, descripcion text, lat text, lon text)',
-        [],
-        function (tx, result){
-          log(result);
-        },
-          function (error) {
-            alert(error);
-        });},
-        errorHandler, exitoHandler
-        );
-       
-        function errorHandler(transaction, error){
-          alert('Error: '+error.message + '; código: '+error.code);
-        }
-        
-        function exitoHandler(){
-          enlistarValores();
-        }
-        
-        function nullHandler(){}
-        
-        function borrarTodo(){
-          db.transaction(function(tx){
-            tx.executeSql('delete from places',
-            [],
-            nullHandler, errorHandler);
-          });
-          enlistarValores();
-          return false;
-        }
-
-        function borrarTable(){
-          db.transaction(function(tx){
-            tx.executeSql('drop table places',
-            [],
-            nullHandler, errorHandler);
-          });
-          return false;
-        }
- 
-
-        function enlistarValores(){
-
-          ul.innerHTML='';
-          db.transaction(function(tx){
-            tx.executeSql('select * from places;',[],
-            function(tx, data){
-              log(data.rows.length);
-              if(data!=null && data.rows!=null){
-                for(var i=0; i < data.rows.length;i++){
-                  var r = data.rows.item(i);
-                  var li = document.createElement("li");
-                  li.appendChild(document.createTextNode(r.id + ', '+ r.nombre+', '+r.descripcion+ ', '+ r.lat+', '+r.lon));
-                  ul.appendChild(li);
-                }
-              }
-            },errorHandler);
-          },errorHandler,nullHandler);
-          return ;
-        }
-
-        function setloading(v){
-          if(v==false){
-            loadingOverlay.style.display='none';
-          }else{
-            loadingOverlay.style.display='flex';
-          }
-        }
-
-        var onSuccess = function(position) {
-          latitude.value = position.coords.latitude;
-          longitud.value = position.coords.longitude;
-          setloading(false);
-        }
-        // onError Callback receives a PositionError object
-        //
-        function onError(error) {
-          alert('code: '    + error.code    + '\n' +
-                'message: ' + error.message + '\n');
-        }
-        
-        function getLocation(){
-          setloading(true);
-          navigator.geolocation.getCurrentPosition(onSuccess, onError);
-        }
-        
-        function insertar(){
-          db.transaction(function(tx){
-            tx.executeSql('insert into places(nombre, descripcion, lat, lon) values(?,?,?,?)',
-            [nombre.value,descripcion.value,latitude.value,longitud.value],
-            function(tx, result){
-              nombre.value=''; 
-              descripcion.value="";
-              latitud.value=''; 
-              longitud.value="";
-            }, errorHandler);
-          });
-          
-          enlistarValores();
-          return false;
-        }
-
-        //app.receivedEvent('deviceready');
+        app.receivedEvent('deviceready');
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
+      /*  
+      var parentElement = document.getElementById(id);
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
 
@@ -214,5 +86,135 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+        */
+       var db;
+       var dbNombre = 'mydb';
+       var dbVersion = '1.0';
+       var dbDescription = 'Test DB';
+       var dbSize = 2*1024*1024;
+       
+       db=window.openDatabase(dbNombre,dbVersion,dbDescription,dbSize);
+       //alert(db);
+       document.getElementById('insertar').onclick=insertar;
+       document.getElementById('enlistar').onclick=enlistarValores;
+       document.getElementById('borrar').onclick=borrarTodo;
+       document.getElementById('borrarTable').onclick=borrarTable;
+       document.getElementById('locationbtn').onclick=getLocation;
+       
+ 
+       loadingOverlay=document.getElementById('loading-overlay');
+       var latitud=document.getElementById('latitud');
+       var longitud=document.getElementById('longitud');
+             
+       var nombre      = document.getElementById('nombre');
+       var descripcion = document.getElementById('descripcion');
+       var ul          = document.getElementById('salida');
+       setloading(false);
+ 
+       db.transaction(function(tx){
+ 
+         tx.executeSql('create table if not exists places(id integer not null primary key, nombre text not null, descripcion text, lat text, lon text)',
+         [],
+         function (tx, result){
+           log(result);
+         },
+           function (error) {
+             alert(error);
+         });},
+         errorHandler, exitoHandler
+         );
+        
+         function errorHandler(transaction, error){
+           alert('Error: '+error.message + '; código: '+error.code);
+         }
+         
+         function exitoHandler(){
+           enlistarValores();
+         }
+         
+         function nullHandler(){}
+         
+         function borrarTodo(){
+           db.transaction(function(tx){
+             tx.executeSql('delete from places',
+             [],
+             nullHandler, errorHandler);
+           });
+           enlistarValores();
+           return false;
+         }
+ 
+         function borrarTable(){
+           db.transaction(function(tx){
+             tx.executeSql('drop table places',
+             [],
+             nullHandler, errorHandler);
+           });
+           return false;
+         }
+  
+ 
+         function enlistarValores(){
+ 
+           ul.innerHTML='';
+           db.transaction(function(tx){
+             tx.executeSql('select * from places;',[],
+             function(tx, data){
+               log(data.rows.length);
+               if(data!=null && data.rows!=null){
+                 for(var i=0; i < data.rows.length;i++){
+                   var r = data.rows.item(i);
+                   var li = document.createElement("li");
+                   li.appendChild(document.createTextNode(r.id + ', '+ r.nombre+', '+r.descripcion+ ', '+ r.lat+', '+r.lon));
+                   ul.appendChild(li);
+                 }
+               }
+             },errorHandler);
+           },errorHandler,nullHandler);
+           return ;
+         }
+ 
+         function setloading(v){
+           if(v==false){
+             loadingOverlay.style.display='none';
+           }else{
+             loadingOverlay.style.display='flex';
+           }
+         }
+ 
+         function locationSuccess(position) {
+           latitud.value = position.coords.latitude;
+           longitud.value = position.coords.longitude;
+           //alert(position.coords.longitude);
+           setloading(false);
+         }
+          
+         function locationError(error) {
+           alert('code: '    + error.code    + '\n' +
+                 'message: ' + error.message + '\n');
+         }
+ 
+         function getLocation(){
+           setloading(true);
+           navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
+         }
+         
+         function insertar(){
+           db.transaction(function(tx){
+             tx.executeSql('insert into places(nombre, descripcion, lat, lon) values(?,?,?,?)',
+             [nombre.value,descripcion.value,latitud.value,longitud.value],
+             function(tx, result){
+               nombre.value=''; 
+               descripcion.value="";
+               latitud.value=''; 
+               longitud.value="";
+               alert('Sitio Registrado correctamente');
+             }, errorHandler);
+           });
+           
+           enlistarValores();
+           return false;
+         }
+ 
     }
 };
