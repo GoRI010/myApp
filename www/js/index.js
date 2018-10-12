@@ -200,6 +200,7 @@ var app = {
          }
          
          function insertar(){
+          setloading(true);
            db.transaction(function(tx){
              tx.executeSql('insert into places(nombre, descripcion, lat, lon) values(?,?,?,?)',
              [nombre.value,descripcion.value,latitud.value,longitud.value],
@@ -209,6 +210,7 @@ var app = {
                latitud.value=''; 
                longitud.value="";
                alert('Sitio Registrado correctamente');
+               setloading(false);
              }, errorHandler);
            });
            
